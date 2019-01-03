@@ -30,7 +30,7 @@ public class ConnectExample {
         // Does not block
         //异步地连接到远程节点
         ChannelFuture future = channel.connect(
-                new InetSocketAddress("192.168.0.1", 25));
+                new InetSocketAddress("127.0.0.1", 25));
         //注册一个 ChannelFutureListener，以便在操作完成时获得通知
         future.addListener(new ChannelFutureListener() {
             @Override
@@ -51,5 +51,9 @@ public class ConnectExample {
                 }
             }
         });
+    }
+
+    public static void main(String[] args) {
+        connect();
     }
 }
