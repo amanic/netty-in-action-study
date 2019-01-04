@@ -45,6 +45,12 @@ public class BlockingIoExample {
         return "Processed";
     }
 
+    /**
+     * @Author martea
+     * 运行该方法之后可以使用telnet命令。相当于一个telnet服务器。
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         new BlockingIoExample().serve(8888);
     }
