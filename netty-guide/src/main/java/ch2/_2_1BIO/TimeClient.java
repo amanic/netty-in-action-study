@@ -31,7 +31,7 @@ public class TimeClient {
     /**
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main1(String[] args) {
 
         int port = 8080;
         if (args != null && args.length > 0) {
@@ -81,5 +81,9 @@ public class TimeClient {
                 socket = null;
             }
         }
+    }
+
+    public static void main(String[] args) {
+
     }
 }
