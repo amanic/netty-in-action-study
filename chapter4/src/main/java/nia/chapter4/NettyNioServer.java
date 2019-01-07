@@ -22,11 +22,13 @@ public class NettyNioServer {
                 Unpooled.unreleasableBuffer(Unpooled.copiedBuffer("Hi!\r\n",
                         Charset.forName("UTF-8")));
         //为非阻塞模式使用NioEventLoopGroup
-        NioEventLoopGroup group = new NioEventLoopGroup();
+        EventLoopGroup group = new NioEventLoopGroup();
         try {
             //创建ServerBootstrap
             ServerBootstrap b = new ServerBootstrap();
-            b.group(group).channel(NioServerSocketChannel.class)
+            b.group(group).
+                    //使用 NioServerSocketChannel以允许非阻塞模式
+                    channel(NioServerSocketChannel.class)
                     .localAddress(new InetSocketAddress(port))
                     //指定 ChannelInitializer，对于每个已接受的连接都调用它
                     .childHandler(new ChannelInitializer<SocketChannel>() {

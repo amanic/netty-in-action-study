@@ -29,12 +29,15 @@ public class PlainOioServer {
                         try {
                             //将消息写给已连接的客户端
                             out = clientSocket.getOutputStream();
+                            Thread.sleep(5000);
                             out.write("Hi!\r\n".getBytes(
                                     Charset.forName("UTF-8")));
                             out.flush();
                             //关闭连接
                             clientSocket.close();
                         } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
                             e.printStackTrace();
                         } finally {
                             try {
@@ -52,6 +55,18 @@ public class PlainOioServer {
         }
     }
 
+    /**
+     * 此处运行之后使用telnet命令：telnet 127.0.0.1 8080
+     * 打印如下：
+     * Trying 127.0.0.1...
+     * Connected to localhost.
+     * Escape character is '^]'.
+     * Hi!
+     * Connection closed by foreign host.
+     * 以上是作为客户端，服务端不关闭。
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         new PlainOioServer().serve(8080);
     }

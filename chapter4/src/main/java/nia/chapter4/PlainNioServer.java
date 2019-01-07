@@ -13,11 +13,11 @@ import java.util.Set;
 
 /**
  * 代码清单 4-2 未使用 Netty 的异步网络编程
- *
+ * 这里使用到了nio。
  * @author <a href="mailto:norman.maurer@gmail.com">Norman Maurer</a>
  */
 public class PlainNioServer {
-    public void serve(int port) throws IOException {
+    public static void serve(int port) throws IOException {
         ServerSocketChannel serverChannel = ServerSocketChannel.open();
         serverChannel.configureBlocking(false);
         ServerSocket ss = serverChannel.socket();
@@ -65,6 +65,7 @@ public class PlainNioServer {
                                 (ByteBuffer) key.attachment();
                         while (buffer.hasRemaining()) {
                             //将数据写到已连接的客户端
+                            Thread.sleep(5000);
                             if (client.write(buffer) == 0) {
                                 break;
                             }
@@ -79,9 +80,27 @@ public class PlainNioServer {
                     } catch (IOException cex) {
                         // ignore on close
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
+    }
+
+    /**
+     * 此处运行之后使用telnet命令：telnet 127.0.0.1 8080
+     * 打印如下：
+     * Trying 127.0.0.1...
+     * Connected to localhost.
+     * Escape character is '^]'.
+     * Hi!
+     * Connection closed by foreign host.
+     * 以上是作为客户端，服务端不关闭。
+     * @param args
+     * @throws IOException
+     */
+    public static void main(String[] args) throws IOException {
+        serve(8080);
     }
 }
 
