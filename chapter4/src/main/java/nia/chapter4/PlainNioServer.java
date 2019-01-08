@@ -32,7 +32,9 @@ public class PlainNioServer {
         for (;;){
             try {
                 //等待需要处理的新事件；阻塞将一直持续到下一个传入事件
-                selector.select();
+                System.out.println("等待需要处理的新事件；阻塞将一直持续到下一个传入事件。");
+                System.out.println("selector.select() = "+selector.select());
+                System.out.println("有新事件，阻塞结束，开始执行业务操作。");
             } catch (IOException ex) {
                 ex.printStackTrace();
                 //handle exception
@@ -41,7 +43,10 @@ public class PlainNioServer {
             //获取所有接收事件的SelectionKey实例
             Set<SelectionKey> readyKeys = selector.selectedKeys();
             Iterator<SelectionKey> iterator = readyKeys.iterator();
+            int i = 0;
             while (iterator.hasNext()) {
+                i++;
+                System.out.println("进入");
                 SelectionKey key = iterator.next();
                 iterator.remove();
                 try {
@@ -84,18 +89,25 @@ public class PlainNioServer {
                     e.printStackTrace();
                 }
             }
+            System.out.println("迭代结束，迭代次数 = "+ i);
         }
     }
 
     /**
      * 此处运行之后使用telnet命令：telnet 127.0.0.1 8080
      * 打印如下：
-     * Trying 127.0.0.1...
-     * Connected to localhost.
-     * Escape character is '^]'.
-     * Hi!
-     * Connection closed by foreign host.
-     * 以上是作为客户端，服务端不关闭。
+     * 等待需要处理的新事件；阻塞将一直持续到下一个传入事件。
+     * selector.select() = 1
+     * 有新事件，阻塞结束，开始执行业务操作。
+     * 进入
+     * Accepted connection from java.nio.channels.SocketChannel[connected local=/127.0.0.1:8080 remote=/127.0.0.1:61330]
+     * 迭代结束，迭代次数 = 1
+     * 等待需要处理的新事件；阻塞将一直持续到下一个传入事件。
+     * selector.select() = 1
+     * 有新事件，阻塞结束，开始执行业务操作。
+     * 进入
+     * 迭代结束，迭代次数 = 1
+     * 等待需要处理的新事件；阻塞将一直持续到下一个传入事件。
      * @param args
      * @throws IOException
      */

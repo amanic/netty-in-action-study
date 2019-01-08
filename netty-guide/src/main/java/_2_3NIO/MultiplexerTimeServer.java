@@ -61,7 +61,10 @@ public class MultiplexerTimeServer implements Runnable {
          */
         while (!stop) {
             try {
+                //select()方法返回的int值表示有多少通道已经就绪。
                 selector.select(1000);
+                //一旦调用了select()方法，并且返回值表明有一个或更多个通道就绪了，然后可以通过调用selector的selectedKeys()方法，
+                // 访问“已选择键集（selected key set）”中的就绪通道。
                 Set<SelectionKey> selectedKeys = selector.selectedKeys();
                 Iterator<SelectionKey> it = selectedKeys.iterator();
                 SelectionKey key = null;
