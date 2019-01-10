@@ -9,5 +9,17 @@
  *                {@link myOwnTest.SocketChatClient} 作为客户端
  *                客户端在发送完消息后，需要服务端进行处理并返回。
  *
+ * @version 2.0.0 基于netty的双向通信
+ *               {@link myOwnTest.HelloWordServer} 作为服务端
+ *               {@link myOwnTest.HelloWorldClient} 作为客户端
+ *
+ * @version 2.0.1 netty的channelActive顺序事件
+ *               {@link myOwnTest.HWClient} 作为客户端
+ *               {@link myOwnTest.HWServer} 作为服务端
+ *               netty的事件机制是由前至后的，
+ *               一般来说，都是一个channel的ChannnelActive方法中调用fireChannelActive来触发调用下一个handler中的ChannelActive方法，
+ *               即你在ChannelPipeline中添加handler的时候，
+ *               要在第一个handler的channelActive方法中调用fireChannelActive，以此来触发下一个事件。
+ *               我们再来写一个案例说明一下：
  */
 package myOwnTest;

@@ -23,7 +23,7 @@ public class HelloWorldClient {
     public void start(){
         EventLoopGroup group = new NioEventLoopGroup();
 
-        Bootstrap bootstrap = new Bootstrap();
+        final Bootstrap bootstrap = new Bootstrap();
 //        bootstrap.group(group)
 //                .channel(NioSocketChannel.class)
 //                .handler(new ClientChannelInitializer());
@@ -49,6 +49,11 @@ public class HelloWorldClient {
                                         @Override
                                         public void channelInactive(ChannelHandlerContext ctx){
                                             System.out.println("Client is close");
+                                        }
+
+                                        @Override
+                                        public void channelWritabilityChanged(ChannelHandlerContext ctx){
+                                            System.out.println("客户端：channelWritabilityChanged ！！！");
                                         }
                                     });
                                 }

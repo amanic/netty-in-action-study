@@ -34,17 +34,30 @@ public class HelloWordServer {
                             @Override
                             public void channelRead(ChannelHandlerContext ctx, Object msg){
                                 System.out.println(ctx.channel().remoteAddress()+"===>server: "+msg.toString());
-                                ctx.write("received your msg");
-                                ctx.flush();
+                                if(msg.toString().endsWith("bye\r\n")){
+                                    ctx.write ("分手就分手！bye!");
+                                    ctx.flush();
+                                    ctx.close();
+                                }else {
+                                    ctx.write("received your msg");
+                                    ctx.flush();
+                                }
                             }
+
+
+                            @Override
+                            public void channelWritabilityChanged(ChannelHandlerContext ctx){
+                                System.out.println("服务端：channelWritabilityChanged ！！！");
+                            }
+
+
 
                             @Override
                             public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
                                 super.exceptionCaught(ctx, cause);
                                 ctx.close();
                             }
-                        })
-                        ;
+                        });
                     }
                 });
 
