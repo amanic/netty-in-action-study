@@ -25,5 +25,19 @@
  * @version 3.0.0 关于拆包粘包
  *               {@link myOwnTest.AboutPackageServer} 作为服务端
  *               {@link myOwnTest.AboutPackageClient} 作为客户端
+ *
+ * @version 3.0.1 关于解决拆包粘包，
+ * 上层应用协议为了对消息进行区分，一般采用如下4种方式：
+ *
+ * 1、消息长度固定，累计读取到消息长度总和为定长Len的报文之后即认为是读取到了一个完整的消息。计数器归位，重新读取。
+ * 2、将回车换行符作为消息结束符。
+ * 3、将特殊的分隔符作为消息分隔符，回车换行符是他的一种。
+ * 4、通过在消息头定义长度字段来标识消息总长度。
+ * LineBasedframeDecoder属于第二种，
+ * 今天我们要说的DelimiterBasedFrameDecoder和FixedLengthFrameDecoder属于第三种和第一种。
+ * DelimiterBasedFrameDecoder用来解决以特殊符号作为消息结束符的粘包问题，FixedLengthFrameDecoder用来解决定长消息的粘包问题。
+ * 下面首先来用DelimiterBasedFrameDecoder来写一个例子，我们看一下效果然后接着分析用法。
+ * {@link myOwnTest.PackageSolutionClient} 作为客户端
+ * {@link myOwnTest.PackageSolutionServer} 作为服务端
  */
 package myOwnTest;
