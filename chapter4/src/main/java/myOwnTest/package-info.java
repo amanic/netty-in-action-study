@@ -21,5 +21,9 @@
  *               即你在ChannelPipeline中添加handler的时候，
  *               要在第一个handler的channelActive方法中调用fireChannelActive，以此来触发下一个事件。
  *               我们再来写一个案例说明一下：
+ *
+ * @version 3.0.0 关于拆包粘包
+ *               {@link myOwnTest.AboutPackageServer} 作为服务端
+ *               {@link myOwnTest.AboutPackageClient} 作为客户端
  */
 package myOwnTest;
