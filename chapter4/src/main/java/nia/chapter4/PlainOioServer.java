@@ -8,6 +8,10 @@ import java.nio.charset.Charset;
 
 /**
  * 代码清单 4-1 未使用 Netty 的阻塞网络编程
+ * 上面的方式可以工作正常，但是这种阻塞模式在大连接数的情况就会有很严重的问题，
+ * 如客户端连接超时，服务器响应严重延迟，性能无法扩展。
+ * 为了解决这种情况，我们可以使用异步网络处理所有的并发连接，但问题在于 NIO 和 OIO 的 API 是完全不同的，
+ * 所以一个用OIO开发的网络应用程序想要使用NIO重构代码几乎是重新开发。
  *
  * @author <a href="mailto:norman.maurer@gmail.com">Norman Maurer</a>
  */
