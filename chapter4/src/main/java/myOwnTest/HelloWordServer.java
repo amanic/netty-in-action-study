@@ -31,32 +31,55 @@ public class HelloWordServer {
                         ch.pipeline().addLast("decoder",new StringDecoder())
                                 .addLast("encoder",new StringEncoder())
                                 .addLast("handler",new ChannelInboundHandlerAdapter(){
-                            @Override
-                            public void channelRead(ChannelHandlerContext ctx, Object msg){
-                                System.out.println(ctx.channel().remoteAddress()+"===>server: "+msg.toString());
-                                if(msg.toString().endsWith("bye\r\n")){
-                                    ctx.write ("分手就分手！bye!");
-                                    ctx.flush();
-                                    ctx.close();
-                                }else {
-                                    ctx.write("received your msg");
-                                    ctx.flush();
-                                }
-                            }
+                                    @Override
+                                    public void channelRead(ChannelHandlerContext ctx, Object msg){
+                                        System.out.println(ctx.channel().remoteAddress()+"===>server: "+msg.toString());
+                                        if(msg.toString().endsWith("bye\r\n")){
+                                            ctx.write ("分手就分手！bye!");
+                                            ctx.flush();
+                                            ctx.close();
+                                        }else {
+                                            ctx.write("received your msg");
+                                            ctx.flush();
+                                        }
+                                    }
 
 
-                            @Override
-                            public void channelWritabilityChanged(ChannelHandlerContext ctx){
-                                System.out.println("服务端：channelWritabilityChanged ！！！");
-                            }
+                                    @Override
+                                    public void channelWritabilityChanged(ChannelHandlerContext ctx){
+                                        System.out.println("服务端：channelWritabilityChanged ！！！");
+                                    }
 
+                                    @Override
+                                    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+                                        System.out.println("channelRegistered");
+                                    }
 
+                                    @Override
+                                    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+                                        System.out.println("channelUnregistered");
+                                    }
 
-                            @Override
-                            public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-                                super.exceptionCaught(ctx, cause);
-                                ctx.close();
-                            }
+                                    @Override
+                                    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+                                        System.out.println("channelActive");
+                                    }
+
+                                    @Override
+                                    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+                                        System.out.println("channelInactive");
+                                    }
+
+                                    @Override
+                                    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+                                        System.out.println("channelReadComplete");
+                                    }
+
+                                    @Override
+                                    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+                                        super.exceptionCaught(ctx, cause);
+                                        ctx.close();
+                                    }
                         });
                     }
                 });

@@ -11,6 +11,17 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import java.net.InetSocketAddress;
 
 public class CustomServer {
+
+    /**
+     *
+     * @param maxFrameLength 解码时，处理每个帧数据的最大长度
+     * @param lengthFieldOffset 该帧数据中，存放该帧数据的长度的数据的起始位置
+     * @param lengthFieldLength 记录该帧数据长度的字段本身的长度
+     * @param lengthAdjustment 修改帧数据长度字段中定义的值，可以为负数
+     * @param initialBytesToStrip 解析的时候需要跳过的字节数
+     * @param failFast 为true，当frame长度超过maxFrameLength时立即报TooLongFrameException异常，为false，读取完整个帧再报异常
+     */
+
     private static final int MAX_FRAME_LENGTH = 1024 * 1024;
     private static final int LENGTH_FIELD_LENGTH = 4;
     private static final int LENGTH_FIELD_OFFSET = 2;
@@ -44,16 +55,6 @@ public class CustomServer {
                                         private int length;
 
                                         private String body;
-
-                                        /**
-                                         *
-                                         * @param maxFrameLength 解码时，处理每个帧数据的最大长度
-                                         * @param lengthFieldOffset 该帧数据中，存放该帧数据的长度的数据的起始位置
-                                         * @param lengthFieldLength 记录该帧数据长度的字段本身的长度
-                                         * @param lengthAdjustment 修改帧数据长度字段中定义的值，可以为负数
-                                         * @param initialBytesToStrip 解析的时候需要跳过的字节数
-                                         * @param failFast 为true，当frame长度超过maxFrameLength时立即报TooLongFrameException异常，为false，读取完整个帧再报异常
-                                         */
 
                                         @Override
                                         protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {

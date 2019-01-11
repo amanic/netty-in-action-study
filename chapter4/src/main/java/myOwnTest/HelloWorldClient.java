@@ -36,25 +36,40 @@ public class HelloWorldClient {
                                     ch.pipeline().addLast("decoder",new StringDecoder())
                                             .addLast("encoder",new StringEncoder())
                                             .addLast("handler",new ChannelInboundHandlerAdapter(){
-                                        @Override
-                                        public void channelRead(ChannelHandlerContext ctx, Object msg){
-                                            System.out.println("server say : "+msg.toString());
-                                        }
+                                                    @Override
+                                                    public void channelRead(ChannelHandlerContext ctx, Object msg){
+                                                        System.out.println("server say : "+msg.toString());
+                                                    }
 
-                                        @Override
-                                        public void channelActive(ChannelHandlerContext ctx){
-                                            System.out.println("Client is active");
-                                        }
+                                                    @Override
+                                                    public void channelActive(ChannelHandlerContext ctx){
+                                                        System.out.println("Client is active");
+                                                    }
 
-                                        @Override
-                                        public void channelInactive(ChannelHandlerContext ctx){
-                                            System.out.println("Client is close");
-                                        }
+                                                    @Override
+                                                    public void channelInactive(ChannelHandlerContext ctx){
+                                                        System.out.println("Client is close");
+                                                    }
 
-                                        @Override
-                                        public void channelWritabilityChanged(ChannelHandlerContext ctx){
-                                            System.out.println("客户端：channelWritabilityChanged ！！！");
-                                        }
+                                                    @Override
+                                                    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+                                                        System.out.println("channelRegistered");
+                                                    }
+
+                                                    @Override
+                                                    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+                                                        System.out.println("channelUnregistered");
+                                                    }
+
+                                                    @Override
+                                                    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+                                                        System.out.println("channelReadComplete");
+                                                    }
+
+                                                            @Override
+                                                    public void channelWritabilityChanged(ChannelHandlerContext ctx){
+                                                        System.out.println("客户端：channelWritabilityChanged ！！！");
+                                                    }
                                     });
                                 }
         });
