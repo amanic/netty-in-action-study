@@ -68,5 +68,23 @@
  *
  *               即可，同时也别忘了把刚才使用的DelimiterBasedFrameDecoder注释掉啊，不然达不到效果。
  *
+ * @version 3.0.2 使用{@link io.netty.handler.codec.LengthFieldBasedFrameDecoder}来解决接收包长度问题
+ *               {@link myOwnTest.CustomServer} 作为服务端
+ *               {@link myOwnTest.CustomClient} 作为客户端
+ *               1. maxFrameLength - 发送的数据帧最大长度（超出后会做一些特殊处理）
+ *
+ *               2. lengthFieldOffset - 定义长度域位于发送的字节数组中的下标。换句话说：发送的字节数组中下标为${lengthFieldOffset}的地方是长度域的开始地方
+ *
+ *               3. lengthFieldLength - 用于描述定义的长度域的长度。换句话说：发送字节数组bytes时, 字节数组bytes[lengthFieldOffset, lengthFieldOffset+lengthFieldLength]域对应于的定义长度域部分
+ *
+ *               4. lengthAdjustment - 满足公式: 发送的字节数组bytes.length - lengthFieldLength = bytes[lengthFieldOffset, lengthFieldOffset+lengthFieldLength] + lengthFieldOffset + lengthAdjustment 
+ *
+ *               5. initialBytesToStrip - 接收到的发送数据包，去除前initialBytesToStrip位
+ *
+ *               6. failFast - true: 读取到长度域超过maxFrameLength，就抛出一个 TooLongFrameException。false: 只有真正读取完长度域的值表示的字节之后，才会抛出 TooLongFrameException，默认情况下设置为true，建议不要修改，否则可能会造成内存溢出
+ *
+ *               7. ByteOrder - 数据存储采用大端模式或小端模式
+ *
+ *
  */
 package myOwnTest;

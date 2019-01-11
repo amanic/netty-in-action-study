@@ -1,13 +1,14 @@
 package myOwnTest;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.MessageToByteEncoder;
+
+import java.nio.charset.Charset;
 
 public class CustomClient {
 
@@ -26,8 +27,29 @@ public class CustomClient {
                     .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new CustomEncoder()).addLast(new CustomClientHandler());
+                        public void initChannel(SocketChannel ch){
+                            ch.pipeline()
+                                    .addLast(new MessageToByteEncoder<CustomMsg>() {
+                                        @Override
+                                        protected void encode(ChannelHandlerContext ctx, CustomMsg msg, ByteBuf out) throws Exception {
+                                            if(null == msg){
+                                                throw new Exception("msg is null");
+                                            }
+
+                                            String body = msg.getBody();
+                                            byte[] bodyBytes = body.getBytes(Charset.forName("utf-8"));
+                                            out.writeByte(msg.getType());
+                                            out.writeByte(msg.getFlag());
+                                            out.writeInt(msg.getLength());
+                                            out.writeBytes(bodyBytes);
+                                        }})
+                                    .addLast(new ChannelInboundHandlerAdapter(){
+                                        @Override
+                                        public void channelActive(ChannelHandlerContext ctx) throws Exception {
+                                            CustomMsg customMsg = new CustomMsg((byte)0xAB, (byte)0xCD, "Hello,Netty".length(), "Hello,Netty---useless info");
+                                            ctx.writeAndFlush(customMsg);
+                                        }
+                                    });
                         }
                     });
 
