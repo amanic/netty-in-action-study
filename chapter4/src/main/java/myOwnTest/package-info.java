@@ -85,6 +85,8 @@
  *
  *               7. ByteOrder - 数据存储采用大端模式或小端模式
  *
- *
+ * 突然有个奇怪的想法
+ *   我在{@link myOwnTest.HelloWordServer}以及{@link myOwnTest.HelloWorldClient} 重定义了各种定义了各种各样的事件通知。
+ *   那个是在一个服务端一个客户端的情况下，如果有一个客户端多个服务端呢？就是说有多个{@link myOwnTest.HelloWorldClient}在运行。
  */
 package myOwnTest;
