@@ -14,6 +14,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 public class EchoServer {
 
@@ -36,35 +37,35 @@ public class EchoServer {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(eventLoopGroup).
                     channel(NioServerSocketChannel.class).//指定channel使用Nio传输
-                    localAddress(new InetSocketAddress(port)).//执行端口设置套接字地址
+//                    localAddress(new InetSocketAddress(port)).//执行端口设置套接字地址
                     childHandler(new ChannelInitializer<SocketChannel>() {//添加echoServerHandler到Channel的channelpipeline上
                 @Override
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
-                    ChannelPipeline channelPipeline = socketChannel.pipeline();
-                    channelPipeline.addFirst(new ChannelInboundHandlerAdapter(){
+                    socketChannel.pipeline()
+                            .addFirst(new ChannelInboundHandlerAdapter(){
                         public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-                            System.out.println("Other注册事件");
+                            System.out.println("Other注册事件"+ new Date().getTime());
                             ctx.fireChannelRegistered();
                         }
 
                         public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-                            System.out.println("Other取消注册事件");
+                            System.out.println("Other取消注册事件"+ new Date().getTime());
                             ctx.fireChannelUnregistered();
                         }
 
                         public void channelActive(ChannelHandlerContext ctx) throws Exception {
-                            System.out.println("Other有新客户端连接接入。。。"+ctx.channel().remoteAddress());
+                            System.out.println("Other有新客户端连接接入。。。"+ctx.channel().remoteAddress()+ new Date().getTime());
                             ctx.fireChannelActive();
                         }
 
                         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-                            System.out.println("Other失去连接");
+                            System.out.println("Other失去连接"+ new Date().getTime());
                             ctx.fireChannelInactive();
                         }
 
                         public void channelRead(ChannelHandlerContext ctx, Object msg) {
                             ByteBuf in = (ByteBuf) msg;
-                            System.out.println("Other读客户端传入数据="+in.toString(CharsetUtil.UTF_8));
+                            System.out.println("Other读客户端传入数据="+in.toString(CharsetUtil.UTF_8)+ new Date().getTime());
                             final ByteBuf byteBuf = Unpooled.copiedBuffer("Other channelRead Netty rocks!", CharsetUtil.UTF_8);
                             ctx.writeAndFlush(byteBuf);
                             ctx.fireChannelRead(msg);
@@ -76,7 +77,7 @@ public class EchoServer {
                                 @Override
                                 public void operationComplete(Future<? super Void> future) throws Exception {
                                     if (future.isSuccess()) {
-                                        System.out.println("Other执行成功="+future.isSuccess());
+                                        System.out.println("Other执行成功="+future.isSuccess()+ new Date().getTime());
                                     }
                                 }
                             });
@@ -95,44 +96,44 @@ public class EchoServer {
                         }
 
                         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-                            System.out.println("Other  userEventTriggered");
+                            System.out.println("Other  userEventTriggered"+ new Date().getTime());
                         }
 
                         public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-                            System.out.println("Other  channelWritabilityChanged");
+                            System.out.println("Other  channelWritabilityChanged"+ new Date().getTime());
                         }
 
                         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
                             cause.printStackTrace();
                             ctx.close();
                         }
-                    });
-                    channelPipeline.addFirst(new ChannelOutboundHandlerAdapter(){
+                    })
+                    .addFirst(new ChannelOutboundHandlerAdapter(){
                         public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-                            System.out.println("EchoServerOutHandler   write "+((ByteBuf)msg).toString(Charset.defaultCharset()));
+                            System.out.println("EchoServerOutHandler   write "+((ByteBuf)msg).toString(Charset.defaultCharset())+ new Date().getTime());
                             ctx.write(msg, promise);
                         }
-                    });
-                    channelPipeline.addLast(new ChannelInboundHandlerAdapter(){
+                    })
+                    .addLast(new ChannelInboundHandlerAdapter(){
                         public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-                            System.out.println("注册事件");
+                            System.out.println("注册事件"+ new Date().getTime());
                         }
 
                         public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-                            System.out.println("取消注册事件");
+                            System.out.println("取消注册事件"+ new Date().getTime());
                         }
 
                         public void channelActive(ChannelHandlerContext ctx) throws Exception {
-                            System.out.println("有新客户端连接接入。。。"+ctx.channel().remoteAddress());
+                            System.out.println("有新客户端连接接入。。。"+ctx.channel().remoteAddress()+ new Date().getTime());
                         }
 
                         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-                            System.out.println("失去连接");
+                            System.out.println("失去连接"+ new Date().getTime());
                         }
 
                         public void channelRead(ChannelHandlerContext ctx, Object msg) {
                             ByteBuf in = (ByteBuf) msg;
-                            System.out.println("读客户端传入数据="+in.toString(CharsetUtil.UTF_8));
+                            System.out.println("读客户端传入数据="+in.toString(CharsetUtil.UTF_8)+ new Date().getTime());
                             ctx.writeAndFlush(Unpooled.copiedBuffer("channelRead Netty rocks!", CharsetUtil.UTF_8));
                             //ctx.fireChannelActive();
                         }
@@ -142,7 +143,7 @@ public class EchoServer {
                                 @Override
                                 public void operationComplete(Future<? super Void> future) throws Exception {
                                     if (future.isSuccess()) {
-                                        System.out.println("执行成功="+future.isSuccess());
+                                        System.out.println("执行成功="+future.isSuccess()+ new Date().getTime());
                                     }
                                 }
                             });
@@ -159,11 +160,11 @@ public class EchoServer {
                         }
 
                         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-                            System.out.println("userEventTriggered");
+                            System.out.println("userEventTriggered"+ new Date().getTime());
                         }
 
                         public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-                            System.out.println("channelWritabilityChanged");
+                            System.out.println("channelWritabilityChanged"+ new Date().getTime());
                         }
 
                         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
@@ -173,7 +174,7 @@ public class EchoServer {
                     });
                 }
             });
-            ChannelFuture f = serverBootstrap.bind().sync();//异步绑定服务器，调用sync()方法阻塞等待直到绑定完成
+            ChannelFuture f = serverBootstrap.bind(port).sync();//异步绑定服务器，调用sync()方法阻塞等待直到绑定完成
             f.channel().closeFuture().sync();//获得Channel的closefutrue，并且阻塞当前线程直到它完成
         } catch (InterruptedException e) {
             eventLoopGroup.shutdownGracefully().sync();

@@ -8,8 +8,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.CharsetUtil;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
+
+import java.util.Date;
 
 
 public class EchoClient {
@@ -39,17 +39,29 @@ public class EchoClient {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline().addLast(new SimpleChannelInboundHandler<ByteBuf>(){
                                 public void channelActive(ChannelHandlerContext ctx) throws Exception {
+                                    System.out.println("channelActive"+new Date().getTime());
                                     ctx.writeAndFlush(Unpooled.copiedBuffer("Netty rocks!", CharsetUtil.UTF_8));
                                 }
 
                                 public void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) {
                                     ByteBuf in = msg;
-                                    System.out.println("读取服务端channelRead0="+in.toString(CharsetUtil.UTF_8));
+                                    System.out.println("读取服务端channelRead0="+in.toString(CharsetUtil.UTF_8)+ new Date().getTime());
                                 }
 
                                 public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
                                     cause.printStackTrace();
                                     ctx.close();
+                                }
+
+
+                                @Override
+                                public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+                                    System.out.println("handlerAdded"+ new Date().getTime());
+                                }
+
+                                @Override
+                                public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+                                    System.out.println("handlerRemoved"+ new Date().getTime());
                                 }
                             });
                         }
