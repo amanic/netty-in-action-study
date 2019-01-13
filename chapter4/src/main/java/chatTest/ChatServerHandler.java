@@ -25,7 +25,7 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
         channels.writeAndFlush("[SERVER] - " + incoming.remoteAddress() + " 加入\n");
 
         channels.add(ctx.channel());
-        System.out.println("完成channel的添加，当前channels = "+channels.size());
+//        System.out.println("完成channel的添加，当前channels = "+channels.size());
     }
     /**
      * 每当从服务端收到客户端断开时，客户端的 Channel 自动从 ChannelGroup 列表中移除了，并通知列表中的其他客户端 Channel
@@ -47,13 +47,22 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String s) throws Exception { // (4)
         Channel incoming = ctx.channel();
-        System.out.println("接收到消息，消息是："+s+"，channels的大小是："+channels.size());
+        if(null==s||s.trim().equals("")||s.contains("爱情")){
+            for (Channel channel : channels) {
+                if(channel == incoming){
+//                    System.out.println("channel == incoming");
+                    channel.writeAndFlush("非法消息，发送失败。"+ "\n");
+                    return;
+                }
+            }
+        }
+//        System.out.println("接收到消息，消息是："+s+"，channels的大小是："+channels.size());
         for (Channel channel : channels) {
             if (channel != incoming) {
-                System.out.println("channel != incoming");
+//                System.out.println("channel != incoming");
                 channel.writeAndFlush("[" + incoming.remoteAddress() + "]" + s + "\n");
             } else {
-                System.out.println("channel == incoming");
+//                System.out.println("channel == incoming");
                 channel.writeAndFlush("[自己]" + s + "\n");
             }
         }
