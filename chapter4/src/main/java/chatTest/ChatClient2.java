@@ -49,72 +49,69 @@ public class ChatClient2 {
 
                                 @Override
                                 public boolean acceptInboundMessage(Object msg) throws Exception {
-                                    return super.acceptInboundMessage(msg);
+                                    boolean b = super.acceptInboundMessage(msg);
+                                    System.out.println("客户端2---acceptInboundMessage"+b);
+                                    return b;
                                 }
 
-                                @Override
-                                public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-                                    super.channelRead(ctx, msg);
-                                }
+//                                @Override
+//                                public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+//                                    System.out.println("客户端2---channelRead");
+//                                }
 
                                 @Override
                                 public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-                                    super.channelRegistered(ctx);
+                                    System.out.println("客户端2---channelRegistered");
                                 }
 
                                 @Override
                                 public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-                                    super.channelUnregistered(ctx);
+                                    System.out.println("客户端2---channelUnregistered");
                                 }
 
                                 @Override
                                 public void channelActive(ChannelHandlerContext ctx) throws Exception {
-                                    super.channelActive(ctx);
+                                    System.out.println("客户端2---channelActive");
                                 }
 
                                 @Override
                                 public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-                                    super.channelInactive(ctx);
+                                    System.out.println("客户端2---channelInactive");
                                 }
 
                                 @Override
                                 public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-                                    super.channelReadComplete(ctx);
+                                    System.out.println("客户端2---channelReadComplete");
                                 }
 
                                 @Override
                                 public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-                                    super.userEventTriggered(ctx, evt);
+                                    System.out.println("客户端2---userEventTriggered");
                                 }
 
                                 @Override
                                 public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-                                    super.channelWritabilityChanged(ctx);
+                                    System.out.println("客户端2---channelWritabilityChanged");
                                 }
 
                                 @Override
                                 public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-                                    super.exceptionCaught(ctx, cause);
+                                    System.out.println("客户端2---exceptionCaught");
                                 }
 
                                 @Override
                                 protected void ensureNotSharable() {
-                                    super.ensureNotSharable();
-                                }
-
-                                @Override
-                                public boolean isSharable() {
-                                    return super.isSharable();
+                                    System.out.println("客户端2---ensureNotSharable");
                                 }
 
                                 @Override
                                 public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-                                    super.handlerAdded(ctx);
+                                    System.out.println("客户端2---handlerAdded");
                                 }
 
                                 @Override
                                 public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-                                    super.handlerRemoved(ctx);
+                                    System.out.println("客户端2---handlerRemoved");
                                 }
                             });
                         }
