@@ -20,14 +20,18 @@ public class PlainNioServer {
     public static void serve(int port) throws IOException {
         //打开ServerSocketChannel,用于监听客户端的连接，他是所有客户端连接的父管道。
         ServerSocketChannel serverChannel = ServerSocketChannel.open();
+        ServerSocketChannel serverChannela = ServerSocketChannel.open();
         //设置为非阻塞模式
         serverChannel.configureBlocking(false);
+        serverChannela.configureBlocking(false);
         //将服务器绑定到选定的端口
         serverChannel.socket().bind(new InetSocketAddress(port));
+        serverChannela.socket().bind(new InetSocketAddress(port+1));
         //打开Selector来处理 Channel
         Selector selector = Selector.open();
         //将ServerSocketChannel注册到Selector以接受连接
         serverChannel.register(selector, SelectionKey.OP_ACCEPT);
+        serverChannela.register(selector, SelectionKey.OP_ACCEPT);
         final ByteBuffer msg = ByteBuffer.wrap("Hi!\r\n".getBytes());
         for (;;){
             try {
