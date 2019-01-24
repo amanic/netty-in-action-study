@@ -40,31 +40,31 @@ public class TestServer {
                          */
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast("HttpServerCodec",new HttpServerCodec())
-                            .addLast("SimpleChannelInboundHandler", new SimpleChannelInboundHandler<HttpObject>() {
-                                @Override
-                                protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
-                                    //一个请求这里会有两个打印，所以下面要加个判断，不然会报错
-                                    System.out.println(msg.getClass());
+                                    .addLast("SimpleChannelInboundHandler", new SimpleChannelInboundHandler<HttpObject>() {
+                                        @Override
+                                        protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
+                                            //一个请求这里会有两个打印，所以下面要加个判断，不然会报错
+                                            System.out.println(msg.getClass());
 
-                                    System.out.println(ctx.channel().remoteAddress());
+                                            System.out.println(ctx.channel().remoteAddress());
 
-                                    if(msg instanceof HttpRequest){
+                                            if(msg instanceof HttpRequest){
 
-                                        System.out.println("请求方法名："+((HttpRequest) msg).method());
+                                                System.out.println("请求方法名："+((HttpRequest) msg).method());
 
-                                        System.out.println("uri="+new URI(((HttpRequest) msg).uri()).getPath());
+                                                System.out.println("uri="+new URI(((HttpRequest) msg).uri()).getPath());
 
-                                        ByteBuf buf = Unpooled.copiedBuffer("陈海涛你好！", CharsetUtil.UTF_8);
-                                        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
-                                                HttpResponseStatus.OK, buf);
-                                        response.headers().set(HttpHeaderNames.CONTENT_TYPE,"text/plain");
-                                        response.headers().set(HttpHeaderNames.CONTENT_LENGTH,buf.readableBytes());
-                                        ctx.writeAndFlush(response);
-                                        // 下面这行代码针对浏览器
-                                        ctx.channel().close();
-                                    }
-                                }
-                            });
+                                                ByteBuf buf = Unpooled.copiedBuffer("陈海涛你好！", CharsetUtil.UTF_8);
+                                                FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
+                                                        HttpResponseStatus.OK, buf);
+                                                response.headers().set(HttpHeaderNames.CONTENT_TYPE,"text/plain");
+                                                response.headers().set(HttpHeaderNames.CONTENT_LENGTH,buf.readableBytes());
+                                                ctx.writeAndFlush(response);
+                                                // 下面这行代码针对浏览器
+                                                ctx.channel().close();
+                                            }
+                                        }
+                                    });
                         }
                     });
             ChannelFuture sync = bootstrap.bind(8899).sync();

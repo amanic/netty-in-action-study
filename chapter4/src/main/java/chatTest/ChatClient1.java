@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
 public class ChatClient1 {
 
     public static void main(String[] args) throws Exception{
-        new ChatClient1("localhost", 8080).run();
+        new ChatClient1("localhost", 8899).run();
     }
 
     private final String host;
