@@ -8,6 +8,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 
 public class WebsocketChatServer {
@@ -43,12 +45,14 @@ public class WebsocketChatServer {
                      * 也许你想通过增加一些处理类比如 SimpleChatServerHandler 来配置一个新的 Channel 或者其对应的 ChannelPipeline 来实现你的网络程序。
                      * 当你的程序变的复杂时，可能你会增加更多的处理类到 pipline 上，然后提取这些匿名类到最顶层的类上。
                      */
+                    .handler(new LoggingHandler(LogLevel.ERROR))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
 
                             pipeline.addLast(new HttpServerCodec());
+                            //netty对于请求采取针对长度分段处理模式，作用就是将分段聚合到一起成为一个完整的http请求-->FullHttpRequest。
                             pipeline.addLast(new HttpObjectAggregator(64*1024));
                             pipeline.addLast(new ChunkedWriteHandler());
                             pipeline.addLast(new HttpRequestHandler("/ws"));

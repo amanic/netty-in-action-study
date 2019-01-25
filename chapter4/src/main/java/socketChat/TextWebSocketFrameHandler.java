@@ -8,6 +8,8 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
+import java.time.LocalDateTime;
+
 /**
  * TextWebSocketFrameHandler 继承自 SimpleChannelInboundHandler ，这个类实现了 ChannelInboundHandler 接口，
  * ChannelInboundHandler 提供了许多事件处理的接口方法，然后你可以覆盖这些方法。
@@ -31,12 +33,13 @@ public class TextWebSocketFrameHandler extends
     @Override
     protected void channelRead0(ChannelHandlerContext ctx,
                                 TextWebSocketFrame msg) throws Exception {
+        System.out.println("收到消息："+msg.text());
         Channel incoming = ctx.channel();
         for (Channel channel : channels) {
             if (channel != incoming){
-                channel.writeAndFlush(new TextWebSocketFrame("[" + incoming.remoteAddress() + "]" + msg.text()));
+                channel.writeAndFlush(new TextWebSocketFrame("[" + incoming.remoteAddress() + "]\r\n"+ LocalDateTime.now() + msg.text()));
             } else {
-                channel.writeAndFlush(new TextWebSocketFrame("[you]" + msg.text() ));
+                channel.writeAndFlush(new TextWebSocketFrame("[you]]\r\n"+ LocalDateTime.now() + msg.text() ));
             }
         }
     }
