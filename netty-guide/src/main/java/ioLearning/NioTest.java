@@ -13,7 +13,7 @@ import java.nio.channels.FileChannel;
 public class NioTest {
 
     public static void main(String[] args) throws Exception {
-        test1();
+        test4();
     }
 
     public static void test1() throws Exception {
@@ -70,4 +70,39 @@ public class NioTest {
         fileInPutStream.close();
         fileOutPutStream.close();
     }
+
+
+    /**
+     * buffer.clear()特别重要
+     * @throws Exception
+     */
+    public static void test4() throws Exception{
+        FileInputStream fileInPutStream = new FileInputStream("input.txt");
+        FileOutputStream fileOutPutStream = new FileOutputStream("output.txt");
+
+        ByteBuffer buffer = ByteBuffer.allocate(128);
+
+        FileChannel inCHannel = fileInPutStream.getChannel();
+        FileChannel outChannel = fileOutPutStream.getChannel();
+
+
+        while (true){
+            buffer.clear();
+            int read = inCHannel.read(buffer);
+            if(-1 == read){
+                break;
+            }
+            buffer.flip();
+            outChannel.write(buffer);
+        }
+
+        fileInPutStream.close();
+        fileOutPutStream.close();
+    }
+
+
+
+
+
+
 }
