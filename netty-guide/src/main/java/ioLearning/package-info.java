@@ -6,7 +6,7 @@
  *
  * java, io 中最为核心的一个概念是流（Stream），面向流的编程。Java 中，一个流要么是输入流，要么是输出流，不可能同时既是输入流又是输出流。
  *
- * java, nio 中拥有 3 个核心概念：Selector, channe1 与 Buffer。在 java, nio 中，我们是面向块（b1 ock）或是缓冲区（buffer）编程的。
+ * java, nio 中拥有 3 个核心概念：Selector, channel 与 Buffer。在 java, nio 中，我们是面向块（block）或是缓冲区（buffer）编程的。
  * Buffer 本身就是一块内存，底层
  *
  * 除了数组之外，Buffer 还提供了对于数据的结构化访问方式，并且可以追踪到系统的读写过程。
@@ -19,6 +19,8 @@
  *
  * 与 Streame 不同的是，Channel 是双向的，一个流只可能是 nputstream 或是 Outputstream, Channe 打开后则可以进行读取、写入或是读写。
  * 由于 Channel 是双向的，因此它能更好地反映出底层操作系统的真实情况；在 inux 系统中，底层操作系统的通道就是双向的
+ *
+ *
  *
  */
 
