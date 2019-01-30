@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.nio.ByteBuffer;
-import java.nio.channels.*;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
 /**
- *
  * 代码清单 4-2 未使用 Netty 的异步网络编程
  * 这里使用到了nio。
+ *
  * @author <a href="mailto:norman.maurer@gmail.com">Norman Maurer</a>
  */
 public class PlainNioServer {
@@ -24,18 +27,18 @@ public class PlainNioServer {
         serverChannela.configureBlocking(false);
         //将服务器绑定到选定的端口
         serverChannel.socket().bind(new InetSocketAddress(port));
-        serverChannela.socket().bind(new InetSocketAddress(port+1));
+        serverChannela.socket().bind(new InetSocketAddress(port + 1));
         //打开Selector来处理 Channel
         Selector selector = Selector.open();
         //将ServerSocketChannel注册到Selector以接受连接
         serverChannel.register(selector, SelectionKey.OP_ACCEPT);
         serverChannela.register(selector, SelectionKey.OP_ACCEPT);
         final ByteBuffer msg = ByteBuffer.wrap("Hi!\r\n".getBytes());
-        for (;;){
+        for (; ; ) {
             try {
                 //等待需要处理的新事件；阻塞将一直持续到下一个传入事件
                 System.out.println("等待需要处理的新事件；阻塞将一直持续到下一个传入事件。");
-                System.out.println("selector.select() = "+selector.select());
+                System.out.println("selector.select() = " + selector.select());
                 System.out.println("有新事件，阻塞结束，开始执行业务操作。");
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -91,7 +94,7 @@ public class PlainNioServer {
                     e.printStackTrace();
                 }
             }
-            System.out.println("迭代结束，迭代次数 = "+ i);
+            System.out.println("迭代结束，迭代次数 = " + i);
         }
     }
 
@@ -110,6 +113,7 @@ public class PlainNioServer {
      * 进入
      * 迭代结束，迭代次数 = 1
      * 等待需要处理的新事件；阻塞将一直持续到下一个传入事件。
+     *
      * @param args
      * @throws IOException
      */
@@ -120,11 +124,12 @@ public class PlainNioServer {
 
     /**
      * {@link 张龙P40 Sec2}
+     *
      * @throws Exception
      */
-    public static void servee() throws IOException{
+    public static void servee() throws IOException {
 
-        int[] ports = new int[]{5000,5001,5002,5003,5004};
+        int[] ports = new int[]{5000, 5001, 5002, 5003, 5004};
         Selector selector = Selector.open();
         for (int i = 0; i < ports.length; i++) {
             ServerSocketChannel channel = ServerSocketChannel.open();
@@ -135,39 +140,35 @@ public class PlainNioServer {
             SelectionKey key = channel.register(selector, SelectionKey.OP_ACCEPT);
 //            key.cancel();
 
-            System.out.println("监听端口："+ports[i]);
+            System.out.println("监听端口：" + ports[i]);
 
         }
 
-        for (;;){
+        for (; ; ) {
             int select = selector.select();
 
-            System.out.println("select = "+select);
+            System.out.println("select = " + select);
 
             Set<SelectionKey> keys = selector.selectedKeys();
             Iterator<SelectionKey> iterator = keys.iterator();
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 SelectionKey key = iterator.next();
                 if (key.isAcceptable()) {
                     ServerSocketChannel channel = (ServerSocketChannel) key.channel();
                     SocketChannel socketChannel = channel.accept();
-
                     socketChannel.configureBlocking(false);
-
-                    socketChannel.register(selector,SelectionKey.OP_READ);
-
+                    socketChannel.register(selector, SelectionKey.OP_READ);
                     iterator.remove();
-                    System.out.println("获得客户端的连接："+socketChannel);
-                }else if(key.isReadable()){
+                    System.out.println("获得客户端的连接：" + socketChannel);
+                } else if (key.isReadable()) {
                     SocketChannel channel = (SocketChannel) key.channel();
-
                     ByteBuffer buffer = ByteBuffer.allocate(64);
                     buffer.clear();
                     int byteRead = 0;
                     byteRead = channel.read(buffer);
                     int total = 0;
-                    while(true){
-                        if (byteRead<=0){
+                    while (true) {
+                        if (byteRead <= 0) {
                             break;
                         }
                         buffer.flip();
@@ -175,20 +176,11 @@ public class PlainNioServer {
                         buffer.clear();
                         total += byteRead;
                         byteRead = channel.read(buffer);
-
                     }
-
-                    System.out.println("------>"+total);
-
+                    System.out.println("------>" + total);
                     iterator.remove();
                 }
-
-
             }
-
-
-
-
         }
     }
 }
