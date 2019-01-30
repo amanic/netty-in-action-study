@@ -62,13 +62,16 @@ public class SelectorLearning {
                         Charset charset = Charset.forName("utf-8");
                         String recievedMsg = String.valueOf(charset.decode(buffer).array());
                         System.out.println(channel+"："+recievedMsg);
-//                        while (iterator.hasNext()){
-//
-//                            clientMap.get(iterator.next()).write(buffer);
-//
-//
-//
-//                        }
+                        while (iterator.hasNext()){
+                            SocketChannel channel1 = clientMap.get(iterator.next());
+                            if(channel==channel1){
+                                channel1.write(ByteBuffer.wrap(("【自己】："+recievedMsg).getBytes()));
+                                System.out.println("自己");
+                            }else {
+                                channel1.write(ByteBuffer.wrap(("【"+channel.getRemoteAddress()+"】："+recievedMsg).getBytes()));
+                                System.out.println("别人");
+                            }
+                        }
                         buffer.clear();
                         read = channel.read(buffer);
                     }
