@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.Set;
 
 /**
+ *
  * 代码清单 4-2 未使用 Netty 的异步网络编程
  * 这里使用到了nio。
  * @author <a href="mailto:norman.maurer@gmail.com">Norman Maurer</a>
@@ -116,7 +114,82 @@ public class PlainNioServer {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        serve(8080);
+//        serve(8080);
+        servee();
+    }
+
+    /**
+     * {@link 张龙P40 Sec2}
+     * @throws Exception
+     */
+    public static void servee() throws IOException{
+
+        int[] ports = new int[]{5000,5001,5002,5003,5004};
+        Selector selector = Selector.open();
+        for (int i = 0; i < ports.length; i++) {
+            ServerSocketChannel channel = ServerSocketChannel.open();
+            channel.configureBlocking(false);
+            ServerSocket serverSocket = channel.socket();
+            serverSocket.bind(new InetSocketAddress(ports[i]));
+
+            SelectionKey key = channel.register(selector, SelectionKey.OP_ACCEPT);
+//            key.cancel();
+
+            System.out.println("监听端口："+ports[i]);
+
+        }
+
+        for (;;){
+            int select = selector.select();
+
+            System.out.println("select = "+select);
+
+            Set<SelectionKey> keys = selector.selectedKeys();
+            Iterator<SelectionKey> iterator = keys.iterator();
+            while (iterator.hasNext()){
+                SelectionKey key = iterator.next();
+                if (key.isAcceptable()) {
+                    ServerSocketChannel channel = (ServerSocketChannel) key.channel();
+                    SocketChannel socketChannel = channel.accept();
+
+                    socketChannel.configureBlocking(false);
+
+                    socketChannel.register(selector,SelectionKey.OP_READ);
+
+                    iterator.remove();
+                    System.out.println("获得客户端的连接："+socketChannel);
+                }else if(key.isReadable()){
+                    SocketChannel channel = (SocketChannel) key.channel();
+
+                    ByteBuffer buffer = ByteBuffer.allocate(64);
+                    buffer.clear();
+                    int byteRead = 0;
+                    byteRead = channel.read(buffer);
+                    int total = 0;
+                    while(true){
+                        if (byteRead<=0){
+                            break;
+                        }
+                        buffer.flip();
+                        channel.write(buffer);
+                        buffer.clear();
+                        total += byteRead;
+                        byteRead = channel.read(buffer);
+
+                    }
+
+                    System.out.println("------>"+total);
+
+                    iterator.remove();
+                }
+
+
+            }
+
+
+
+
+        }
     }
 }
 

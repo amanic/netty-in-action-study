@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 
 /**
+ * {@link 张龙P40 Sec1}
  * 代码清单 4-1 未使用 Netty 的阻塞网络编程
  * 上面的方式可以工作正常，但是这种阻塞模式在大连接数的情况就会有很严重的问题，
  * 如客户端连接超时，服务器响应严重延迟，性能无法扩展。
@@ -25,12 +26,17 @@ public class PlainOioServer {
                 final Socket clientSocket = socket.accept();
                 System.out.println(
                         "Accepted connection from " + clientSocket);
-                //创建一个新的线程来处理该连接
+                //创建一个新的线程来处理该连接，
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         OutputStream out;
                         try {
+
+//这里会阻塞                   byte[] bytes = new byte[10];
+//                            clientSocket.getInputStream().read(bytes);
+//                            System.out.println(bytes.length);
+
                             //将消息写给已连接的客户端
                             out = clientSocket.getOutputStream();
                             Thread.sleep(5000);
